@@ -5,8 +5,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
-import nl.tritewolf.tritejection.TriteJection;
-import nl.tritewolf.tritejection.annotations.TriteJect;
 import nl.tritewolf.tritejection.utils.iterators.ResourceIterator;
 import org.jboss.vfs.VirtualFile;
 

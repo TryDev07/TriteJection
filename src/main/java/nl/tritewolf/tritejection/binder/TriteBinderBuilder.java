@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class TriteBinderBuilder<K> {
 
-    private final Class<? extends K> clazz;
+    private Class<? extends K> clazz;
     private final TriteBinderContainer triteBinderContainer;
 
     private final TriteBinding.TriteBindingBuilder triteBinding;
@@ -33,11 +33,11 @@ public class TriteBinderBuilder<K> {
             this.triteBinderContainer.addBinding(triteBinding);
             return;
         }
-
         if (!isConstructorAnnotationPresent(triteBinding)) {
             try {
-                this.triteBinderContainer.addBinding(this.triteBinding.binding(clazz.getDeclaredConstructor().newInstance()).build());
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                TriteBinding build = this.triteBinding.binding(clazz.getDeclaredConstructor().newInstance()).build();
+                this.triteBinderContainer.addBinding(build);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return;
@@ -60,8 +60,9 @@ public class TriteBinderBuilder<K> {
         return this;
     }
 
-    public TriteBinderBuilder<K> to(K object) {
-        this.triteBinding.classType(object.getClass());
+    public TriteBinderBuilder<K> to(Class<? extends K> clazz) {
+        this.clazz = clazz;
+//        this.triteBinding.classType(clazz);
         return this;
     }
 

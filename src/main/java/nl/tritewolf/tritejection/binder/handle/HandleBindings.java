@@ -3,8 +3,10 @@ package nl.tritewolf.tritejection.binder.handle;
 import lombok.AllArgsConstructor;
 import nl.tritewolf.tritejection.TriteJection;
 import nl.tritewolf.tritejection.annotations.TriteJect;
+import nl.tritewolf.tritejection.annotations.TriteNamed;
 import nl.tritewolf.tritejection.binder.TriteBinderBuilder;
 import nl.tritewolf.tritejection.binder.TriteBinderContainer;
+import nl.tritewolf.tritejection.binder.TriteBinderProcessor;
 import nl.tritewolf.tritejection.binder.TriteBinding;
 import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
 import nl.tritewolf.tritejection.exceptions.TriteMultipleConstructorException;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class HandleBindings {
 
     private final TriteBinderContainer triteBinderContainer;
+    private final TriteBinderProcessor triteBinderProcessor;
 
     public void initBindings() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, TriteMultipleConstructorException, NoTriteBindingException {
         List<TriteBinding> bindings = this.triteBinderContainer.getBindings();
@@ -37,9 +40,16 @@ public class HandleBindings {
                 List<Object> availableBindings = new ArrayList<>();
 
                 for (Class<?> parameterType : parameterTypes) {
-                    System.out.println(parameterType);
+                    if (parameterType.isAnnotationPresent(TriteNamed.class)) {
+                        TriteBinding binding = triteBinderProcessor.getInstanceByAnnotation(parameterType.getAnnotation(TriteNamed.class).value());
+
+                        if (binding != null) {
+                            availableBindings.add(binding.getBinding());
+                        }
+                        continue;
+                    }
+
                     TriteBinding binding = triteBinderContainer.getBinding(parameterType);
-                    System.out.println(binding);
                     if (binding != null) {
                         availableBindings.add(binding.getBinding());
                         continue;

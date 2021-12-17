@@ -3,12 +3,14 @@ package nl.tritewolf.tritejection;
 import lombok.Getter;
 import nl.tritewolf.tritejection.binder.TriteBinderContainer;
 import nl.tritewolf.tritejection.binder.TriteBinderProcessor;
+import nl.tritewolf.tritejection.binder.TriteBinding;
 import nl.tritewolf.tritejection.bindings.FieldBinding;
 import nl.tritewolf.tritejection.module.TriteJectionModule;
 import nl.tritewolf.tritejection.utils.AnnotationDetector;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Getter
 public class TriteJection {
@@ -24,8 +26,6 @@ public class TriteJection {
 
         try {
             Arrays.stream(triteJectionModule).forEach(TriteJectionModule::bindings);
-            this.triteBinderProcessor.handleBindings();
-
             AnnotationDetector annotationDetector = new AnnotationDetector(new FieldBinding(this.triteBinderProcessor));
 
             ClassLoader classLoader = triteJectionModule.getClass().getClassLoader();
@@ -33,6 +33,7 @@ public class TriteJection {
 
             annotationDetector.detect(classLoader, objects);
 
+            this.triteBinderProcessor.handleBindings();
         } catch (IOException e) {
             e.printStackTrace();
         }

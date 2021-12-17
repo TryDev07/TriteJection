@@ -28,7 +28,7 @@ public class FieldBinding implements FieldReporter {
 
             declaredField.set(triteBinderProcessor.getInstanceByClass(clazz).getBinding(),
                     triteBinderProcessor.getInstanceByAnnotation(declaredField.getAnnotation(TriteNamed.class).value()).getBinding());
-        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -36,6 +36,6 @@ public class FieldBinding implements FieldReporter {
     @SuppressWarnings("unchecked")
     @Override
     public Class<? extends Annotation>[] annotations() {
-        return new Class[]{TriteJect.class};
+        return new Class[]{TriteJect.class, TriteNamed.class};
     }
 }

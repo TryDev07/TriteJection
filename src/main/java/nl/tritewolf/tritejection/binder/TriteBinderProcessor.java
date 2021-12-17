@@ -15,7 +15,7 @@ public class TriteBinderProcessor {
 
     public void handleBindings() {
         try {
-            new HandleBindings(this.triteBinderContainer).initBindings();
+            new HandleBindings(this.triteBinderContainer, this).initBindings();
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -26,7 +26,7 @@ public class TriteBinderProcessor {
     }
 
     public TriteBinding getInstanceByAnnotation(String annotation) {
-        return triteBinderContainer.getBindings().stream().filter(triteBinding -> triteBinding.getNamed().equals(annotation)).findFirst().orElseThrow(() -> new NoTriteAnnotationBindingException(annotation));
+        return triteBinderContainer.getBindings().stream().filter(triteBinding -> triteBinding.getNamed() != null && triteBinding.getNamed().equals(annotation)).findFirst().orElseThrow(() -> new NoTriteAnnotationBindingException(annotation));
     }
 
 }

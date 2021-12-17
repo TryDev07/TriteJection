@@ -1,17 +1,20 @@
 package nl.tritewolf.tritejection.binder;
 
 import lombok.Getter;
+import lombok.Setter;
 import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
 
 @Getter
+@Setter
 public class TriteBinderContainer {
 
-    private final List<TriteBinding> methodBindings = new ArrayList<>();
-    private final List<TriteBinding> bindings = new ArrayList<>();
+    private ConcurrentLinkedDeque<TriteBinding> methodBindings = new ConcurrentLinkedDeque<>();
+    private List<TriteBinding> bindings = new ArrayList<>();
 
     public TriteBinding getBinding(Class<?> classType) {
         return this.bindings.stream().filter(triteBinding -> triteBinding.getClassType().equals(classType))

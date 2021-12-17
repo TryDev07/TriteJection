@@ -11,10 +11,8 @@ import nl.tritewolf.tritejection.exceptions.TriteMultipleConstructorException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -24,37 +22,45 @@ public class HandleBindings {
 
     public void initBindings() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, TriteMultipleConstructorException, NoTriteBindingException {
         List<TriteBinding> bindings = this.triteBinderContainer.getBindings();
-        List<TriteBinding> bindingBuilders = this.triteBinderContainer.getMethodBindings();
+        ConcurrentLinkedDeque<TriteBinding> bindingBuilders = this.triteBinderContainer.getMethodBindings();
 
         while (!bindingBuilders.isEmpty()) {
-            TriteBinding bindingBuilder = bindingBuilders.iterator().next();
-            Class<?> bindingBuilderClass = bindingBuilder.getClassType();
+            for (TriteBinding bindingBuilder : bindingBuilders) {
+                Class<?> bindingBuilderClass = bindingBuilder.getClassType();
 
-            List<Constructor<?>> constructors = Arrays.stream(bindingBuilderClass.getDeclaredConstructors()).filter(cost -> cost.isAnnotationPresent(TriteJect.class)).collect(Collectors.toList());
-            if (constructors.size() > 1) {
-                throw new TriteMultipleConstructorException();
-            }
+                List<Constructor<?>> constructors = Arrays.stream(bindingBuilderClass.getDeclaredConstructors()).filter(cost -> cost.isAnnotationPresent(TriteJect.class)).collect(Collectors.toList());
+                if (constructors.size() > 1) {
+                    throw new TriteMultipleConstructorException();
+                }
 
-            Class<?>[] parameterTypes = constructors.get(0).getParameterTypes();
-            List<Object> availableBindings = new ArrayList<>();
+                Class<?>[] parameterTypes = constructors.get(0).getParameterTypes();
+                List<Object> availableBindings = new ArrayList<>();
 
-            for (Class<?> parameterType : parameterTypes) {
-                TriteBinding binding = triteBinderContainer.getBinding(parameterType);
-                if (binding != null) {
-                    availableBindings.add(binding.getBinding());
+                for (Class<?> parameterType : parameterTypes) {
+                    System.out.println(parameterType);
+                    TriteBinding binding = triteBinderContainer.getBinding(parameterType);
+                    System.out.println(binding);
+                    if (binding != null) {
+                        availableBindings.add(binding.getBinding());
+                        continue;
+                    }
+                    availableBindings.add(null);
+                }
+
+                if (!bindingBuilders.iterator().hasNext() && availableBindings.stream().anyMatch(Objects::isNull)) {
+                    bindingBuilders.remove(bindingBuilder);
+                    throw new NoTriteBindingException("There is an missing binding for constructor in class " + constructors.get(0).getClass().getSimpleName());
+                }
+
+                if (availableBindings.stream().anyMatch(Objects::isNull)) {
                     continue;
                 }
-                availableBindings.add(null);
-            }
 
-            if (availableBindings.stream().anyMatch(Objects::isNull) && !bindingBuilders.iterator().hasNext()) {
+                Object binding = bindingBuilderClass.getDeclaredConstructor(parameterTypes).newInstance(availableBindings.toArray(new Object[0]));
+                bindings.add(new TriteBinding(bindingBuilder.getClassType(), binding, bindingBuilder.getNamed()));
                 bindingBuilders.remove(bindingBuilder);
-                throw new NoTriteBindingException("There is an missing binding for constructor in class " + constructors.get(0).getClass().getSimpleName());
             }
-
-            Object binding = bindingBuilderClass.getDeclaredConstructor(parameterTypes).newInstance(availableBindings.toArray(new Object[0]));
-            bindings.add(new TriteBinding(bindingBuilder.getClassType(), binding, bindingBuilder.getNamed()));
-            bindingBuilders.remove(bindingBuilder);
         }
+
     }
 }

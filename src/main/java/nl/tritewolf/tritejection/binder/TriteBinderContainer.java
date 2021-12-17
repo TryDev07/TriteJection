@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 public class TriteBinderContainer {
 
+    private final List<TriteBinding.TriteBindingBuilder> bindingBuilders = new ArrayList<>();
     private final List<TriteBinding> bindings = new ArrayList<>();
 
     public TriteBinding getBinding(Class<?> classType) {
@@ -19,6 +20,10 @@ public class TriteBinderContainer {
 
     public void addBinding(TriteBinding triteBinding) {
         this.bindings.add(triteBinding);
+    }
+
+    public void addBinderBuilder(TriteBinding.TriteBindingBuilder binderBuilder) {
+        this.bindingBuilders.add(binderBuilder);
     }
 
 }

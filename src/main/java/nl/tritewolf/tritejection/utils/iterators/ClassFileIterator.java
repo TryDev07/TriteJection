@@ -14,7 +14,6 @@ public final class ClassFileIterator extends ResourceIterator {
 
     public ClassFileIterator() {
         this(classPath(), null);
-        System.out.println(Arrays.toString(classPath()));
     }
 
     public ClassFileIterator(final File[] filesOrDirectories, final String[] pkgNameFilter) {
@@ -23,7 +22,6 @@ public final class ClassFileIterator extends ResourceIterator {
     }
 
     public String getName() {
-        // Both getPath() and getName() are very light weight method calls
         return zipIterator == null ?
             fileIterator.getFile().getPath() :
             zipIterator.getEntry().getName();

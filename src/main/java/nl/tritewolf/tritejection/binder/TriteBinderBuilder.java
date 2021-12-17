@@ -5,6 +5,8 @@ import nl.tritewolf.tritejection.annotations.TriteJect;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TriteBinderBuilder<K> {
 
@@ -32,20 +34,25 @@ public class TriteBinderBuilder<K> {
             return;
         }
 
-        if (isConstructorAnnotationPresent(triteBinding)) {
+        if (!isConstructorAnnotationPresent(triteBinding)) {
             try {
-                this.triteBinderContainer.addBinding(this.triteBinding.binding(this.triteBinding.getClass().getDeclaredConstructor().newInstance()).build());
+                this.triteBinderContainer.addBinding(this.triteBinding.binding(clazz.getDeclaredConstructor().newInstance()).build());
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
             return;
         }
 
-        this.triteBinderContainer.addBinderBuilder(this.triteBinding);
+        this.triteBinderContainer.addBinderBuilder(this.triteBinding.build());
+
     }
 
     private boolean isConstructorAnnotationPresent(TriteBinding triteBinding) {
-        return Arrays.stream(triteBinding.getClassType().getDeclaredConstructors()).anyMatch(constructor -> constructor.isAnnotationPresent(TriteJect.class));
+        List<Constructor<?>> collect = Arrays.stream(triteBinding.getClassType().getDeclaredConstructors()).collect(Collectors.toList());
+        if (collect.isEmpty()) {
+            return false;
+        }
+        return collect.stream().anyMatch(constructor -> constructor.isAnnotationPresent(TriteJect.class));
     }
 
     public TriteBinderBuilder<K> annotatedWith(String name) {

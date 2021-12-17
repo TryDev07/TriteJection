@@ -24,6 +24,8 @@ public class TriteJection {
 
         try {
             Arrays.stream(triteJectionModule).forEach(TriteJectionModule::bindings);
+            this.triteBinderProcessor.handleBindings();
+
             AnnotationDetector annotationDetector = new AnnotationDetector(new FieldBinding(this.triteBinderProcessor));
 
             ClassLoader classLoader = triteJectionModule.getClass().getClassLoader();

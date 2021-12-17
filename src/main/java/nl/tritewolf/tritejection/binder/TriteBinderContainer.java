@@ -12,13 +12,13 @@ public class TriteBinderContainer {
     private final List<TriteBinding> bindings = new ArrayList<>();
 
     public TriteBinding getBinding(Class<?> classType) {
-        return bindings.stream().filter(triteBinding -> triteBinding.getClassType().equals(classType))
+        return this.bindings.stream().filter(triteBinding -> triteBinding.getClassType().equals(classType))
                 .findFirst()
                 .orElseThrow(() -> new NoTriteBindingException(classType.getSimpleName()));
     }
 
     public void addBinding(TriteBinding triteBinding) {
-        bindings.add(triteBinding);
+        this.bindings.add(triteBinding);
     }
 
 }

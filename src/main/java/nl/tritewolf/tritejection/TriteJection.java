@@ -1,6 +1,5 @@
 package nl.tritewolf.tritejection;
 
-import lombok.Builder;
 import lombok.Getter;
 import nl.tritewolf.tritejection.binder.TriteBinderContainer;
 import nl.tritewolf.tritejection.binder.TriteBinderProcessor;
@@ -10,7 +9,6 @@ import nl.tritewolf.tritejection.utils.AnnotationDetector;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Getter
 public class TriteJection {

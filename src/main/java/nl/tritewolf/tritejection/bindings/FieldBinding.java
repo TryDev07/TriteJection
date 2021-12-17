@@ -16,7 +16,6 @@ public class FieldBinding implements FieldReporter {
 
     @Override
     public void reportFieldAnnotation(Class<? extends Annotation> annotation, String className, String fieldName) {
-        System.out.println(className);
         try {
             Class<?> clazz = Class.forName(className);
             Field declaredField = clazz.getDeclaredField(fieldName);

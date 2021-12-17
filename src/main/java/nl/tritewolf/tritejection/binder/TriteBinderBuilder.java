@@ -24,11 +24,11 @@ public class TriteBinderBuilder<K> {
     }
 
     public void asEagerSingleton() {
-        triteBinderContainer.addBinding(this.triteBinding.build());
+        this.triteBinderContainer.addBinding(this.triteBinding.build());
     }
 
     public TriteBinderBuilder<K> annotatedWith(String name) {
-        triteBinding.named(name);
+        this.triteBinding.named(name);
         return this;
     }
 

@@ -1,5 +1,13 @@
 package nl.tritewolf.tritejection.binder;
 
+import nl.tritewolf.tritejection.annotations.TriteJect;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class TriteBinderBuilder<K> {
 
     private final Class<? extends K> clazz;
@@ -15,16 +23,36 @@ public class TriteBinderBuilder<K> {
     }
 
     private TriteBinding.TriteBindingBuilder initBuilder() {
-        try {
-            return TriteBinding.builder().classType(clazz).binding(clazz.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-            return TriteBinding.builder();
-        }
+        return TriteBinding.builder().classType(clazz);
     }
 
     public void asEagerSingleton() {
-        this.triteBinderContainer.addBinding(this.triteBinding.build());
+        TriteBinding triteBinding = this.triteBinding.build();
+
+        if (triteBinding.getBinding() != null) {
+            this.triteBinderContainer.addBinding(triteBinding);
+            return;
+        }
+
+        if (!isConstructorAnnotationPresent(triteBinding)) {
+            try {
+                this.triteBinderContainer.addBinding(this.triteBinding.binding(clazz.getDeclaredConstructor().newInstance()).build());
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        this.triteBinderContainer.addBinderBuilder(this.triteBinding.build());
+
+    }
+
+    private boolean isConstructorAnnotationPresent(TriteBinding triteBinding) {
+        List<Constructor<?>> collect = Arrays.stream(triteBinding.getClassType().getDeclaredConstructors()).collect(Collectors.toList());
+        if (collect.isEmpty()) {
+            return false;
+        }
+        return collect.stream().anyMatch(constructor -> constructor.isAnnotationPresent(TriteJect.class));
     }
 
     public TriteBinderBuilder<K> annotatedWith(String name) {
@@ -33,11 +61,7 @@ public class TriteBinderBuilder<K> {
     }
 
     public TriteBinderBuilder<K> to(K object) {
-        try {
-            this.triteBinding.classType(object.getClass()).binding(object.getClass().newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        this.triteBinding.classType(object.getClass());
         return this;
     }
 

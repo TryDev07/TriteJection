@@ -17,11 +17,11 @@ maven repository:
 </repositories>
 
 <dependencies>
-<dependency>
-    <groupId>com.github.TryDev07</groupId>
-    <artifactId>TriteJection</artifactId>
-    <version>-SNAPSHOT</version>
-</dependency>
+    <dependency>
+	    <groupId>com.github.TryDev07</groupId>
+	    <artifactId>TriteJection</artifactId>
+	    <version>v1.0.0</version>
+	</dependency>
 </dependencies>
 ```
 

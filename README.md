@@ -20,7 +20,7 @@ maven repository:
     <dependency>
 	    <groupId>com.github.TryDev07</groupId>
 	    <artifactId>TriteJection</artifactId>
-	    <version>v1.0.0</version>
+	    <version>v1.1.0</version>
 	</dependency>
 </dependencies>
 ```
@@ -39,7 +39,7 @@ public class ExampleModule extends TriteJectionModule {
         bind(ExampleTestClass.class).toInstance(new ExampleTestClass("hello world")).asEagerSingleton();
         bind(ExampleTestClass.class).asEagerSingleton();
 
-        bind(ExampleInterface.class).annotatedWith("ExampleBicycle").to(new ExampleBycicle()).asEagerSingleton();
+        bind(ExampleInterface.class).annotatedWith("ExampleBicycle").to(ExampleBycicle.class).asEagerSingleton();
     }
 }
 ```

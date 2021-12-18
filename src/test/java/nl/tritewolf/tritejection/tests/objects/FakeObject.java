@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TestObject {
+public class FakeObject {
 
     int i = 0;
 }

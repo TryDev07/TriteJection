@@ -8,6 +8,8 @@ import nl.tritewolf.tritejection.binder.TriteBinderProcessor;
 import nl.tritewolf.tritejection.binder.TriteBinding;
 import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
 import nl.tritewolf.tritejection.exceptions.TriteMultipleConstructorException;
+import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
+import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinderContainer;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -68,7 +70,13 @@ public class HandleBindings {
                 }
 
                 Object binding = bindingBuilderClass.getDeclaredConstructor(parameterTypes).newInstance(availableBindings.toArray(new Object[0]));
-                bindings.add(new TriteBinding(bindingBuilder.getClassType(), binding, bindingBuilder.getNamed()));
+
+                TriteJectionMultiBinder multiBinder = bindingBuilder.getMultiBinder();
+                if (multiBinder != null) {
+                    multiBinder.handleMultiBinding(binding);
+                }
+
+                bindings.add(new TriteBinding(bindingBuilder.getClassType(), binding, bindingBuilder.getNamed(), multiBinder));
                 bindingBuilders.remove(bindingBuilder);
             }
         }

@@ -16,6 +16,6 @@ public abstract class TriteJectionModule {
     }
 
     protected <K> TriteBinderBuilder<K> bind(Class<K> clazz) {
-        return new TriteBinderBuilder<>(clazz, TriteJection.getInstance().getTriteBinderContainer());
+        return new TriteBinderBuilder<>(clazz, TriteJection.getInstance().getTriteBinderContainer(), TriteJection.getInstance().getTriteMultiBinderContainer());
     }
 }

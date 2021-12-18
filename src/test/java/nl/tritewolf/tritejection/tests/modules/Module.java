@@ -1,16 +1,23 @@
 package nl.tritewolf.tritejection.tests.modules;
 
 import nl.tritewolf.tritejection.module.TriteJectionModule;
+import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
 import nl.tritewolf.tritejection.tests.injections.*;
 import nl.tritewolf.tritejection.tests.interfaces.Test;
 import nl.tritewolf.tritejection.tests.interfaces.TestHandling;
-import nl.tritewolf.tritejection.tests.objects.TestObject;
+import nl.tritewolf.tritejection.tests.multibindings.Cache;
+import nl.tritewolf.tritejection.tests.multibindings.MultiBinding;
+import nl.tritewolf.tritejection.tests.multibindings.injections.MultiBinderInject;
+import nl.tritewolf.tritejection.tests.objects.FakeObject;
 
-public class TestModule extends TriteJectionModule {
+import java.util.Collections;
+import java.util.List;
+
+public class Module extends TriteJectionModule {
 
     @Override
     public void bindings() {
-        bind(TestObject.class).asEagerSingleton();
+        bind(FakeObject.class).asEagerSingleton();
 
         //Field injection.
         bind(AsEagerSingletonInject.class).asEagerSingleton();
@@ -25,5 +32,13 @@ public class TestModule extends TriteJectionModule {
         bind(Test.class).annotatedWith("TestHandling").to(TestHandling.class).asEagerSingleton();
         bind(AsEagerSingletonNamedInjection.class).asEagerSingleton();
         bind(AsEagerSingletonNamedConstructorInjection.class).asEagerSingleton();
+
+        //Multibinding injection
+        bind(MultiBinderInject.class).toMultiBinder(Cache.class).asEagerSingleton();
+    }
+
+    @Override
+    public List<TriteJectionMultiBinder> registerMultiBindings() {
+        return Collections.singletonList(new MultiBinding());
     }
 }

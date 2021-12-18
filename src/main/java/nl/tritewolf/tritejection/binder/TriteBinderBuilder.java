@@ -1,9 +1,10 @@
 package nl.tritewolf.tritejection.binder;
 
 import nl.tritewolf.tritejection.annotations.TriteJect;
+import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
+import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinderContainer;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,12 +13,14 @@ public class TriteBinderBuilder<K> {
 
     private Class<? extends K> clazz;
     private final TriteBinderContainer triteBinderContainer;
+    private final TriteJectionMultiBinderContainer triteMultiBinderContainer;
 
     private final TriteBinding.TriteBindingBuilder triteBinding;
 
-    public TriteBinderBuilder(Class<? extends K> clazz, TriteBinderContainer triteBinderContainer) {
+    public TriteBinderBuilder(Class<? extends K> clazz, TriteBinderContainer triteBinderContainer, TriteJectionMultiBinderContainer triteMultiBinderContainer) {
         this.clazz = clazz;
         this.triteBinderContainer = triteBinderContainer;
+        this.triteMultiBinderContainer = triteMultiBinderContainer;
 
         this.triteBinding = initBuilder();
     }
@@ -35,7 +38,15 @@ public class TriteBinderBuilder<K> {
         }
         if (!isConstructorAnnotationPresent(triteBinding)) {
             try {
-                TriteBinding build = this.triteBinding.binding(clazz.getDeclaredConstructor().newInstance()).build();
+                K binding = clazz.getDeclaredConstructor().newInstance();
+
+                TriteJectionMultiBinder multiBinder = triteBinding.getMultiBinder();
+                if (multiBinder != null) {
+                    System.out.println(multiBinder);
+                    multiBinder.handleMultiBinding(binding);
+                }
+
+                TriteBinding build = this.triteBinding.binding(binding).build();
                 this.triteBinderContainer.addBinding(build);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -57,6 +68,12 @@ public class TriteBinderBuilder<K> {
 
     public TriteBinderBuilder<K> annotatedWith(String name) {
         this.triteBinding.named(name);
+        return this;
+    }
+
+    public TriteBinderBuilder<K> toMultiBinder(Class<?> clazz) {
+        TriteJectionMultiBinder triteJectionMultiBinder = this.triteMultiBinderContainer.getTriteJectionMultiBinder(clazz);
+        this.triteBinding.multiBinder(triteJectionMultiBinder);
         return this;
     }
 

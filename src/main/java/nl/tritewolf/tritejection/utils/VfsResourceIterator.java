@@ -1,12 +1,12 @@
 package nl.tritewolf.tritejection.utils;
 
+import nl.tritewolf.tritejection.utils.iterators.ResourceIterator;
+import org.jboss.vfs.VirtualFile;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-
-import nl.tritewolf.tritejection.utils.iterators.ResourceIterator;
-import org.jboss.vfs.VirtualFile;
 
 final class VfsResourceIterator extends ResourceIterator {
 

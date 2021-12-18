@@ -9,7 +9,6 @@ import nl.tritewolf.tritejection.binder.TriteBinding;
 import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
 import nl.tritewolf.tritejection.exceptions.TriteMultipleConstructorException;
 import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
-import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinderContainer;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

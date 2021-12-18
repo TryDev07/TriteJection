@@ -1,8 +1,6 @@
 package nl.tritewolf.tritejection.utils.iterators;
 
-
 import java.io.*;
-import java.util.Arrays;
 import java.util.zip.ZipFile;
 
 public final class ClassFileIterator extends ResourceIterator {

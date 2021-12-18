@@ -7,24 +7,14 @@ import nl.tritewolf.tritejection.utils.types.MethodReporter;
 import nl.tritewolf.tritejection.utils.types.Reporter;
 import nl.tritewolf.tritejection.utils.types.TypeReporter;
 
-import java.io.DataInput;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
+import java.util.*;
 
 public final class AnnotationDetector {
 

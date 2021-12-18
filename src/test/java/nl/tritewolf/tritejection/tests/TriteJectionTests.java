@@ -122,6 +122,7 @@ public class TriteJectionTests {
         Assertions.assertNotNull(Cache.getBindings());
         Assertions.assertNotNull(Cache.getBindings().get(triteJection.getClass()));
         Assertions.assertEquals(99, Cache.getBindings().get(triteJection.getClass()));
+        Assertions.assertNotNull(triteJection.fakeObject);
     }
 
 }

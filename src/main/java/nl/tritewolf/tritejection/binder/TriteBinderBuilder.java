@@ -62,7 +62,6 @@ public class TriteBinderBuilder<K> {
 
     public TriteBinderBuilder<K> to(Class<? extends K> clazz) {
         this.clazz = clazz;
-//        this.triteBinding.classType(clazz);
         return this;
     }
 

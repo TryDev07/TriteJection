@@ -29,7 +29,15 @@
             <version>3.2.16.Final</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
 
     <build>
         <finalName>tritejection-${version}</finalName>

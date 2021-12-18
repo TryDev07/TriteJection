@@ -5,7 +5,9 @@ import nl.tritewolf.tritejection.binder.TriteBinderContainer;
 import nl.tritewolf.tritejection.binder.TriteBinderProcessor;
 import nl.tritewolf.tritejection.binder.TriteBinding;
 import nl.tritewolf.tritejection.bindings.FieldBinding;
+import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
 import nl.tritewolf.tritejection.module.TriteJectionModule;
+import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinderContainer;
 import nl.tritewolf.tritejection.utils.AnnotationDetector;
 
 import java.io.IOException;
@@ -36,6 +38,15 @@ public class TriteJection {
             this.triteBinderProcessor.handleBindings();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <K> K getTriteJection(Class<K> clazz) {
+        try {
+            return (K) triteBinderProcessor.getInstanceByClass(clazz).getBinding();
+        } catch (NullPointerException nullPointerException) {
+            throw new NoTriteBindingException(clazz.getSimpleName());
         }
     }
 

@@ -101,6 +101,16 @@ public class TriteJectionTests {
         Assertions.assertEquals("this is working", handle);
     }
 
+    @DisplayName("Constructor and field injection test")
+    @Test
+    public void testConstructorAndFieldInjection() {
+        ConstructorAndFieldInjection triteJection = TriteJectionTests.triteJection.getTriteJection(ConstructorAndFieldInjection.class);
+
+        Assertions.assertNotNull(triteJection);
+        Assertions.assertNotNull(triteJection.getFakeObject());
+
+    }
+
 
     @DisplayName("Multibinding initialization test.")
     @Test

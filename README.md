@@ -34,6 +34,7 @@ public class ExampleModule extends TriteJectionModule {
 
     @Override
     public void bindings() {
+        //
         bind(ExampleClass.class).asEagerSingleton();
 
         bind(ExampleTestClass.class).toInstance(new ExampleTestClass("hello world")).asEagerSingleton();
@@ -49,11 +50,20 @@ public class ExampleModule extends TriteJectionModule {
 Example of initialization:
 
 ```java
+import nl.tritewolf.tritejection.annotations.TriteJect;
+import nl.tritewolf.tritejection.annotations.TriteNamed;
+
 public class Example {
+
+
+    @TriteNamed("")
+    ExampleClass2 exampleClass2
 
     public static void main(String[] args) {
         TriteJection.createTriteJection(new ExampleModule(), new ExampleModule2());
+        System.out.println();
     }
+
 }
 ```
 

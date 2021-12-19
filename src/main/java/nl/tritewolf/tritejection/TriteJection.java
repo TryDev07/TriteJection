@@ -29,7 +29,6 @@ public class TriteJection {
 
         try {
             Arrays.stream(triteJectionModule).forEach(module -> {
-                System.out.println(module.registerMultiBindings());
                 module.registerMultiBindings().forEach(triteMultiBinderContainer::addTriteJectionMultiBinder);
                 module.bindings();
             });
@@ -39,9 +38,9 @@ public class TriteJection {
             ClassLoader classLoader = triteJectionModule.getClass().getClassLoader();
             String[] objects = Arrays.stream(classLoader.getDefinedPackages()).map(Package::getName).toArray(String[]::new);
 
-            annotationDetector.detect(classLoader, objects);
-
             this.triteBinderProcessor.handleBindings();
+
+            annotationDetector.detect(classLoader, objects);
         } catch (IOException e) {
             e.printStackTrace();
         }

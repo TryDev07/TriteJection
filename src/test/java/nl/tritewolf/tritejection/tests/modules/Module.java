@@ -35,6 +35,8 @@ public class Module extends TriteJectionModule {
 
         //Multibinding injection
         bind(MultiBinderInject.class).toMultiBinder(Cache.class).asEagerSingleton();
+
+        bind(ConstructorAndFieldInjection.class).asEagerSingleton();
     }
 
     @Override

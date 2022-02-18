@@ -123,9 +123,7 @@ public final class AnnotationDetector {
         if (DEBUG) {
             print("Files to scan: %s", files);
         }
-        System.out.println(files);
         if (!files.isEmpty()) {
-            System.out.println(files);
             detect(new ClassFileIterator(files.toArray(new File[0]), pkgNameFilter));
         }
     }

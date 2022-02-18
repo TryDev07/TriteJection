@@ -2,6 +2,7 @@ package nl.tritewolf.tritejection.binder;
 
 import nl.tritewolf.tritejection.binder.handle.HandleBindings;
 import nl.tritewolf.tritejection.exceptions.NoTriteAnnotationBindingException;
+import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
 
 import java.lang.reflect.InvocationTargetException;
 

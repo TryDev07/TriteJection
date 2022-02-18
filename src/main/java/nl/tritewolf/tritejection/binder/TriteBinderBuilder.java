@@ -42,7 +42,6 @@ public class TriteBinderBuilder<K> {
 
                 TriteJectionMultiBinder multiBinder = triteBinding.getMultiBinder();
                 if (multiBinder != null) {
-                    System.out.println(multiBinder);
                     multiBinder.handleMultiBinding(binding);
                 }
 

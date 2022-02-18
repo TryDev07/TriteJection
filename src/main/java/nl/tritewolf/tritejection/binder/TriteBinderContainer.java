@@ -19,7 +19,7 @@ public class TriteBinderContainer {
     public TriteBinding getBinding(Class<?> classType) {
         return this.bindings.stream().filter(triteBinding -> triteBinding.getClassType().equals(classType))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new NoTriteBindingException(classType.getSimpleName()));
     }
 
     public void addBinding(TriteBinding triteBinding) {

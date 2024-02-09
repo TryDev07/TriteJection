@@ -38,7 +38,10 @@ public class TriteBinderBuilder<K> {
         }
         if (!isConstructorAnnotationPresent(triteBinding)) {
             try {
-                K binding = clazz.getDeclaredConstructor().newInstance();
+                Constructor<? extends K> declaredConstructor = clazz.getDeclaredConstructor();
+                declaredConstructor.setAccessible(true);
+
+                K binding = declaredConstructor.newInstance();
 
                 TriteJectionMultiBinder multiBinder = triteBinding.getMultiBinder();
                 if (multiBinder != null) {
@@ -47,6 +50,8 @@ public class TriteBinderBuilder<K> {
 
                 TriteBinding build = this.triteBinding.binding(binding).build();
                 this.triteBinderContainer.addBinding(build);
+
+                declaredConstructor.setAccessible(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }

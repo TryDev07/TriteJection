@@ -1,6 +1,8 @@
 package nl.tritewolf.tritejection.binder;
 
+import nl.tritewolf.tritejection.TriteJection;
 import nl.tritewolf.tritejection.annotations.TriteJect;
+import nl.tritewolf.tritejection.module.TriteJectionModule;
 import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
 import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinderContainer;
 
@@ -31,7 +33,6 @@ public class TriteBinderBuilder<K> {
 
     public void asEagerSingleton() {
         TriteBinding triteBinding = this.triteBinding.build();
-
         if (triteBinding.getBinding() != null) {
             this.triteBinderContainer.addBinding(triteBinding);
             return;
@@ -60,6 +61,39 @@ public class TriteBinderBuilder<K> {
 
         this.triteBinderContainer.addBinderBuilder(this.triteBinding.build());
 
+    }
+
+    public void asSubModule() {
+        this.triteBinding.isSubModule(true);
+        TriteBinding triteBinding = this.triteBinding.build();
+
+        if (triteBinding.getBinding() != null) {
+            this.triteBinderContainer.addBinding(triteBinding);
+            return;
+        }
+
+        if (!isConstructorAnnotationPresent(triteBinding)) {
+            try {
+                Constructor<? extends K> declaredConstructor = clazz.getDeclaredConstructor();
+                declaredConstructor.setAccessible(true);
+
+                K binding = declaredConstructor.newInstance();
+                if (!(binding instanceof TriteJectionModule)) {
+                    throw new RuntimeException("Cannot bind " + binding.getClass().getSimpleName() + " because class isn't and module");
+                }
+                TriteJection.getInstance().addModule((TriteJectionModule) binding);
+
+                TriteBinding build = this.triteBinding.binding(binding).build();
+                this.triteBinderContainer.addBinding(build);
+
+                declaredConstructor.setAccessible(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        this.triteBinderContainer.addBinderBuilder(this.triteBinding.build());
     }
 
     private boolean isConstructorAnnotationPresent(TriteBinding triteBinding) {
@@ -91,4 +125,5 @@ public class TriteBinderBuilder<K> {
         this.triteBinding.classType(clazz).binding(object);
         return this;
     }
+
 }

@@ -15,4 +15,8 @@ public class AsEagerSingletonInject {
         fakeObject.setI(i);
         return i;
     }
+
+    public int getTest(){
+        return 10;
+    }
 }

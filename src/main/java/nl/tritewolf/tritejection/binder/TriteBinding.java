@@ -11,12 +11,14 @@ public class TriteBinding {
     private final Object binding;
     private final String named;
     private final TriteJectionMultiBinder multiBinder;
+    private final boolean isSubModule;
 
     @Builder
-    public TriteBinding(Class<?> classType, Object binding, String named, TriteJectionMultiBinder multiBinder) {
+    public TriteBinding(Class<?> classType, Object binding, String named, TriteJectionMultiBinder multiBinder, boolean isSubModule) {
         this.classType = classType;
         this.binding = binding;
         this.named = named;
         this.multiBinder = multiBinder;
+        this.isSubModule = isSubModule;
     }
 }

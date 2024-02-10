@@ -3,6 +3,7 @@ package nl.tritewolf.tritejection.tests;
 import nl.tritewolf.tritejection.TriteJection;
 import nl.tritewolf.tritejection.binder.TriteBinderContainer;
 import nl.tritewolf.tritejection.tests.injections.*;
+import nl.tritewolf.tritejection.tests.interfaces.TestSubHandling;
 import nl.tritewolf.tritejection.tests.modules.Module;
 import nl.tritewolf.tritejection.tests.multibindings.Cache;
 import nl.tritewolf.tritejection.tests.multibindings.injections.MultiBinderInject;
@@ -108,6 +109,17 @@ public class TriteJectionTests {
 
         Assertions.assertNotNull(triteJection);
         Assertions.assertNotNull(triteJection.getFakeObject());
+
+    }
+
+    @DisplayName("Sub module injections test")
+    @Test
+    public void testSubModuleInjections() {
+        TestSubHandling triteJection = TriteJectionTests.triteJection.getTriteJection(TestSubHandling.class);
+
+        Assertions.assertNotNull(triteJection);
+        Assertions.assertNotNull(triteJection.getString());
+        Assertions.assertEquals("test" , triteJection.getString());
 
     }
 

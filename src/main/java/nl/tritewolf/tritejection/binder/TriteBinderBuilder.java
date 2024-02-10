@@ -51,7 +51,7 @@ public class TriteBinderBuilder<K> {
                 TriteBinding build = this.triteBinding.binding(binding).build();
                 this.triteBinderContainer.addBinding(build);
 
-                declaredConstructor.setAccessible(true);
+                declaredConstructor.setAccessible(false);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -61,14 +61,17 @@ public class HandleBindings {
 
                 if (!bindingBuilders.iterator().hasNext() && availableBindings.stream().anyMatch(Objects::isNull)) {
                     bindingBuilders.remove(bindingBuilder);
-                    throw new NoTriteBindingException("There is an missing binding for constructor in class " + constructors.get(0).getClass().getSimpleName());
+                    throw new NoTriteBindingException("There is an missing binding for constructor in class " + constructors.get(0).getClass().getSimpleName() );
                 }
 
                 if (availableBindings.stream().anyMatch(Objects::isNull)) {
                     continue;
                 }
 
-                Object binding = bindingBuilderClass.getDeclaredConstructor(parameterTypes).newInstance(availableBindings.toArray(new Object[0]));
+                Constructor<?> declaredConstructor = bindingBuilderClass.getDeclaredConstructor(parameterTypes);
+                declaredConstructor.setAccessible(true);
+
+                Object binding = declaredConstructor.newInstance(availableBindings.toArray(new Object[0]));
 
                 TriteJectionMultiBinder multiBinder = bindingBuilder.getMultiBinder();
                 if (multiBinder != null) {
@@ -77,6 +80,8 @@ public class HandleBindings {
 
                 bindings.add(new TriteBinding(bindingBuilder.getClassType(), binding, bindingBuilder.getNamed(), multiBinder));
                 bindingBuilders.remove(bindingBuilder);
+
+                declaredConstructor.setAccessible(false);
             }
         }
 

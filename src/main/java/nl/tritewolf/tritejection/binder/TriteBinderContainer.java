@@ -7,7 +7,6 @@ import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -23,11 +22,13 @@ public class TriteBinderContainer {
     }
 
     public void addBinding(TriteBinding triteBinding) {
-        if (this.bindings.stream().anyMatch(binding -> binding.getClassType().equals(triteBinding.getClassType()))) {
-            return;
-        }
+        if (exists(triteBinding)) return;
 
         this.bindings.add(triteBinding);
+    }
+
+    public boolean exists(TriteBinding triteBinding) {
+        return this.bindings.stream().anyMatch(binding -> binding.getClassType().equals(triteBinding.getClassType()));
     }
 
     public void addBinderBuilder(TriteBinding binderBuilder) {

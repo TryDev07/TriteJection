@@ -25,7 +25,6 @@ public class HandleBindings {
     private final TriteBinderProcessor triteBinderProcessor;
 
     public void initBindings() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, TriteMultipleConstructorException, NoTriteBindingException {
-        List<TriteBinding> bindings = this.triteBinderContainer.getBindings();
         ConcurrentLinkedDeque<TriteBinding> bindingBuilders = this.triteBinderContainer.getMethodBindings();
 
         Iterator<TriteBinding> iterator = bindingBuilders.iterator();
@@ -33,6 +32,10 @@ public class HandleBindings {
         while (iterator.hasNext()) {
             TriteBinding bindingBuilder = iterator.next();
             Class<?> bindingBuilderClass = bindingBuilder.getClassType();
+
+            if (this.triteBinderContainer.exists(bindingBuilder)) {
+                return;
+            }
 
             List<Constructor<?>> constructors = Arrays.stream(bindingBuilderClass.getDeclaredConstructors()).filter(cost -> cost.isAnnotationPresent(TriteJect.class)).collect(Collectors.toList());
             if (constructors.size() > 1) {

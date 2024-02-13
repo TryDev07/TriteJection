@@ -33,6 +33,11 @@ public class TriteBinderBuilder<K> {
 
     public void asEagerSingleton() {
         TriteBinding triteBinding = this.triteBinding.build();
+
+        if (this.triteBinderContainer.getBindings().stream().anyMatch(binding -> binding.getClassType().equals(triteBinding.getClassType()))) {
+           return;
+        }
+
         if (triteBinding.getBinding() != null) {
             this.triteBinderContainer.addBinding(triteBinding);
             return;
@@ -66,6 +71,10 @@ public class TriteBinderBuilder<K> {
     public void asSubModule() {
         this.triteBinding.isSubModule(true);
         TriteBinding triteBinding = this.triteBinding.build();
+
+        if (this.triteBinderContainer.getBindings().stream().anyMatch(binding -> binding.getClassType().equals(triteBinding.getClassType()))) {
+            return;
+        }
 
         if (triteBinding.getBinding() != null) {
             this.triteBinderContainer.addBinding(triteBinding);

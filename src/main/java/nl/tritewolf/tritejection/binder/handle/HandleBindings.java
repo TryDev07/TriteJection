@@ -91,7 +91,7 @@ public class HandleBindings {
                 continue;
             }
 
-            bindings.add(new TriteBinding(bindingBuilder.getClassType(), binding, bindingBuilder.getNamed(), multiBinder, false));
+            this.triteBinderContainer.addBinding(new TriteBinding(bindingBuilder.getClassType(), binding, bindingBuilder.getNamed(), multiBinder, false));
             iterator.remove();
 
             declaredConstructor.setAccessible(false);

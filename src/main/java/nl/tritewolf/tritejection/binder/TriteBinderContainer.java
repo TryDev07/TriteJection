@@ -23,6 +23,10 @@ public class TriteBinderContainer {
     }
 
     public void addBinding(TriteBinding triteBinding) {
+        if (this.bindings.stream().anyMatch(binding -> binding.getClassType().equals(triteBinding.getClassType()))) {
+            return;
+        }
+
         this.bindings.add(triteBinding);
     }
 

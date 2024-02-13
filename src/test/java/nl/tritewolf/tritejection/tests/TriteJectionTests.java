@@ -2,6 +2,7 @@ package nl.tritewolf.tritejection.tests;
 
 import nl.tritewolf.tritejection.TriteJection;
 import nl.tritewolf.tritejection.binder.TriteBinderContainer;
+import nl.tritewolf.tritejection.binder.TriteBinding;
 import nl.tritewolf.tritejection.tests.injections.*;
 import nl.tritewolf.tritejection.tests.interfaces.TestSubHandling;
 import nl.tritewolf.tritejection.tests.modules.Module;

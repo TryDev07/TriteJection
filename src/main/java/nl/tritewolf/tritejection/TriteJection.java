@@ -3,6 +3,7 @@ package nl.tritewolf.tritejection;
 import lombok.Getter;
 import nl.tritewolf.tritejection.binder.TriteBinderContainer;
 import nl.tritewolf.tritejection.binder.TriteBinderProcessor;
+import nl.tritewolf.tritejection.binder.TriteBinding;
 import nl.tritewolf.tritejection.bindings.FieldBinding;
 import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
 import nl.tritewolf.tritejection.module.TriteJectionModule;

@@ -77,9 +77,11 @@ public class HandleBindings {
 
             Object binding = declaredConstructor.newInstance(availableBindings.toArray(new Object[0]));
 
-            TriteJectionMultiBinder multiBinder = bindingBuilder.getMultiBinder();
-            if (multiBinder != null) {
-                multiBinder.handleMultiBinding(binding);
+            Collection<TriteJectionMultiBinder> multiBinders = bindingBuilder.getMultiBinders();
+            if (multiBinders != null) {
+                for (TriteJectionMultiBinder multiBinder : multiBinders) {
+                    multiBinder.handleMultiBinding(binding);
+                }
             }
 
             if (bindingBuilder.isSubModule()) {
@@ -94,7 +96,7 @@ public class HandleBindings {
                 continue;
             }
 
-            this.triteBinderContainer.addBinding(new TriteBinding(bindingBuilder.getClassType(), binding, bindingBuilder.getNamed(), multiBinder, false));
+            this.triteBinderContainer.addBinding(new TriteBinding(bindingBuilder.getClassType(), binding, bindingBuilder.getNamed(), multiBinders, false));
             iterator.remove();
 
             declaredConstructor.setAccessible(false);

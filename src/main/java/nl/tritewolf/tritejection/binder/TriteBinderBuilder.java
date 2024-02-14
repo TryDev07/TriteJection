@@ -8,6 +8,7 @@ import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinderContainer;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class TriteBinderBuilder<K> {
         TriteBinding triteBinding = this.triteBinding.build();
 
         if (this.triteBinderContainer.getBindings().stream().anyMatch(binding -> binding.getClassType().equals(triteBinding.getClassType()))) {
-           return;
+            return;
         }
 
         if (triteBinding.getBinding() != null) {
@@ -49,9 +50,11 @@ public class TriteBinderBuilder<K> {
 
                 K binding = declaredConstructor.newInstance();
 
-                TriteJectionMultiBinder multiBinder = triteBinding.getMultiBinder();
-                if (multiBinder != null) {
-                    multiBinder.handleMultiBinding(binding);
+                Collection<TriteJectionMultiBinder> multiBinders = triteBinding.getMultiBinders();
+                if (multiBinders != null) {
+                    for (TriteJectionMultiBinder multiBinder : multiBinders) {
+                        multiBinder.handleMultiBinding(binding);
+                    }
                 }
 
                 TriteBinding build = this.triteBinding.binding(binding).build();

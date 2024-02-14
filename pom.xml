@@ -6,7 +6,7 @@
 
     <groupId>nl.tritewolf.tritejection</groupId>
     <artifactId>TriteJection</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
 
     <repositories>
         <repository>

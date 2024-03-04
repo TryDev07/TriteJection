@@ -10,7 +10,9 @@ import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinderContainer;
 import nl.tritewolf.tritejection.utils.AnnotationDetector;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Getter
 public class TriteJection {
@@ -21,12 +23,7 @@ public class TriteJection {
     private final TriteBinderProcessor triteBinderProcessor;
     private final TriteJectionMultiBinderContainer triteMultiBinderContainer;
 
-    public TriteJection() {
-        instance = this;
-        this.triteBinderContainer = new TriteBinderContainer();
-        this.triteBinderProcessor = new TriteBinderProcessor(this.triteBinderContainer);
-        this.triteMultiBinderContainer = new TriteJectionMultiBinderContainer();
-    }
+    private final List<TriteJectionModule> modules = new ArrayList<>();
 
     private TriteJection(TriteJectionModule... triteJectionModule) {
         instance = this;
@@ -34,23 +31,7 @@ public class TriteJection {
         this.triteBinderProcessor = new TriteBinderProcessor(this.triteBinderContainer);
         this.triteMultiBinderContainer = new TriteJectionMultiBinderContainer();
 
-        try {
-            Arrays.stream(triteJectionModule).forEach(module -> {
-                module.registerMultiBindings().forEach(triteMultiBinderContainer::addTriteJectionMultiBinder);
-                module.bindings();
-            });
-
-            AnnotationDetector annotationDetector = new AnnotationDetector(new FieldBinding(this.triteBinderProcessor));
-
-            ClassLoader classLoader = triteJectionModule.getClass().getClassLoader();
-            String[] objects = Arrays.stream(Package.getPackages()).map(Package::getName).toArray(String[]::new);
-
-            this.triteBinderProcessor.handleBindings();
-
-            annotationDetector.detect(classLoader, objects);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        addModule(triteJectionModule);
     }
 
 
@@ -64,23 +45,30 @@ public class TriteJection {
     }
 
     public void addModule(TriteJectionModule... triteJectionModule) {
-        try {
-            Arrays.stream(triteJectionModule).forEach(module -> {
-                module.registerMultiBindings().forEach(triteMultiBinderContainer::addTriteJectionMultiBinder);
-                module.bindings();
-            });
+        Arrays.stream(triteJectionModule).forEach(module -> {
+            module.registerMultiBindings().forEach(triteMultiBinderContainer::addTriteJectionMultiBinder);
+            module.bindings();
+            this.modules.add(module);
+        });
 
+    }
+
+    public void process() {
+        try {
             AnnotationDetector annotationDetector = new AnnotationDetector(new FieldBinding(this.triteBinderProcessor));
 
-            ClassLoader classLoader = triteJectionModule.getClass().getClassLoader();
+            ClassLoader classLoader = modules.get(0).getClass().getClassLoader();
+
             String[] objects = Arrays.stream(Package.getPackages()).map(Package::getName).toArray(String[]::new);
 
             this.triteBinderProcessor.handleBindings();
 
             annotationDetector.detect(classLoader, objects);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public static TriteJection createTriteJection(TriteJectionModule... triteJectionModule) {

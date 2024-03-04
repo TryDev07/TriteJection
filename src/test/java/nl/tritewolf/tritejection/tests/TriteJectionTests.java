@@ -24,6 +24,8 @@ public class TriteJectionTests {
     static void setup() {
         module = new Module();
         triteJection = TriteJection.createTriteJection(module);
+
+        triteJection.process();
         Logger.getAnonymousLogger().info("Starting testing:");
     }
 

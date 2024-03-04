@@ -55,17 +55,22 @@ public class HandleBindings {
                     continue;
                 }
 
-                TriteBinding binding = triteBinderContainer.getBinding(parameterType);
-                if (binding != null) {
-                    availableBindings.add(binding.getBinding());
-                    continue;
+                try {
+                    TriteBinding binding = triteBinderContainer.getBinding(parameterType);
+
+                    if (binding != null) {
+                        availableBindings.add(binding.getBinding());
+                        continue;
+                    }
+                    availableBindings.add(null);
+                }catch (NoTriteBindingException exception){
+                    throw new NoTriteBindingException("ERROR IN Handle binding A" , constructors.get(0).getClass().getSimpleName());
                 }
-                availableBindings.add(null);
             }
 
             if (!iterator.hasNext() && availableBindings.stream().anyMatch(Objects::isNull)) {
                 iterator.remove();
-                throw new NoTriteBindingException("There is an missing binding for constructor in class " + constructors.get(0).getClass().getSimpleName());
+                throw new NoTriteBindingException("ERROR IN Handle binding B" ,"There is an missing binding for constructor in class " + constructors.get(0).getClass().getSimpleName());
             }
 
             if (availableBindings.stream().anyMatch(Objects::isNull)) {

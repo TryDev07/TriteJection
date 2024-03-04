@@ -3,7 +3,6 @@ package nl.tritewolf.tritejection;
 import lombok.Getter;
 import nl.tritewolf.tritejection.binder.TriteBinderContainer;
 import nl.tritewolf.tritejection.binder.TriteBinderProcessor;
-import nl.tritewolf.tritejection.binder.TriteBinding;
 import nl.tritewolf.tritejection.bindings.FieldBinding;
 import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
 import nl.tritewolf.tritejection.module.TriteJectionModule;
@@ -22,7 +21,7 @@ public class TriteJection {
     private final TriteBinderProcessor triteBinderProcessor;
     private final TriteJectionMultiBinderContainer triteMultiBinderContainer;
 
-    public TriteJection(){
+    public TriteJection() {
         instance = this;
         this.triteBinderContainer = new TriteBinderContainer();
         this.triteBinderProcessor = new TriteBinderProcessor(this.triteBinderContainer);
@@ -60,11 +59,11 @@ public class TriteJection {
         try {
             return (K) triteBinderProcessor.getInstanceByClass(clazz).getBinding();
         } catch (NullPointerException nullPointerException) {
-            throw new NoTriteBindingException(clazz.getSimpleName());
+            throw new NoTriteBindingException("Error in getistance ", clazz.getSimpleName());
         }
     }
 
-    public void addModule(TriteJectionModule... triteJectionModule){
+    public void addModule(TriteJectionModule... triteJectionModule) {
         try {
             Arrays.stream(triteJectionModule).forEach(module -> {
                 module.registerMultiBindings().forEach(triteMultiBinderContainer::addTriteJectionMultiBinder);

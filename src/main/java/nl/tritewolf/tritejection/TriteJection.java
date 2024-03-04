@@ -34,7 +34,6 @@ public class TriteJection {
         addModule(triteJectionModule);
     }
 
-
     @SuppressWarnings("unchecked")
     public <K> K getTriteJection(Class<K> clazz) {
         try {
@@ -49,8 +48,9 @@ public class TriteJection {
             module.registerMultiBindings().forEach(triteMultiBinderContainer::addTriteJectionMultiBinder);
             module.bindings();
             this.modules.add(module);
-        });
 
+            this.triteBinderProcessor.handleBindings(module);
+        });
     }
 
     public void process() {
@@ -61,10 +61,7 @@ public class TriteJection {
 
             String[] objects = Arrays.stream(Package.getPackages()).map(Package::getName).toArray(String[]::new);
 
-            this.triteBinderProcessor.handleBindings();
-
             annotationDetector.detect(classLoader, objects);
-
         } catch (IOException e) {
             e.printStackTrace();
         }

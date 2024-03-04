@@ -3,6 +3,7 @@ package nl.tritewolf.tritejection.binder;
 import nl.tritewolf.tritejection.binder.handle.HandleBindings;
 import nl.tritewolf.tritejection.exceptions.NoTriteAnnotationBindingException;
 import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
+import nl.tritewolf.tritejection.module.TriteJectionModule;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -14,9 +15,9 @@ public class TriteBinderProcessor {
         this.triteBinderContainer = triteBinderContainer;
     }
 
-    public void handleBindings() {
+    public void handleBindings(TriteJectionModule module) {
         try {
-            new HandleBindings(this.triteBinderContainer, this).initBindings();
+            new HandleBindings(this.triteBinderContainer, this).initBindings(module);
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }

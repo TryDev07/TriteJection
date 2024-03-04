@@ -15,13 +15,16 @@ import java.util.stream.Collectors;
 public class TriteBinderBuilder<K> {
 
     private Class<? extends K> clazz;
+    private final TriteJectionModule module;
     private final TriteBinderContainer triteBinderContainer;
     private final TriteJectionMultiBinderContainer triteMultiBinderContainer;
 
     private final TriteBinding.TriteBindingBuilder triteBinding;
 
-    public TriteBinderBuilder(Class<? extends K> clazz, TriteBinderContainer triteBinderContainer, TriteJectionMultiBinderContainer triteMultiBinderContainer) {
+
+    public TriteBinderBuilder(Class<? extends K> clazz, TriteJectionModule module, TriteBinderContainer triteBinderContainer, TriteJectionMultiBinderContainer triteMultiBinderContainer) {
         this.clazz = clazz;
+        this.module = module;
         this.triteBinderContainer = triteBinderContainer;
         this.triteMultiBinderContainer = triteMultiBinderContainer;
 
@@ -67,7 +70,7 @@ public class TriteBinderBuilder<K> {
             return;
         }
 
-        this.triteBinderContainer.addBinderBuilder(this.triteBinding.build());
+        this.triteBinderContainer.addBinderBuilder(this.module, this.triteBinding.build());
 
     }
 
@@ -105,7 +108,7 @@ public class TriteBinderBuilder<K> {
             return;
         }
 
-        this.triteBinderContainer.addBinderBuilder(this.triteBinding.build());
+        this.triteBinderContainer.addBinderBuilder(this.module, this.triteBinding.build());
     }
 
     private boolean isConstructorAnnotationPresent(TriteBinding triteBinding) {

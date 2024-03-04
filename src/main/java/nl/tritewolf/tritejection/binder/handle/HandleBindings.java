@@ -63,14 +63,15 @@ public class HandleBindings {
                         continue;
                     }
                     availableBindings.add(null);
-                }catch (NoTriteBindingException exception){
-                    throw new NoTriteBindingException("ERROR IN Handle binding A" , constructors.get(0).getClass().getSimpleName());
+                } catch (NoTriteBindingException exception) {
+                    throw new NoTriteBindingException("ERROR IN Handle binding A ", "in class " + bindingBuilderClass.getSimpleName() + " for parameter " + parameterType.getSimpleName());
                 }
             }
 
             if (!iterator.hasNext() && availableBindings.stream().anyMatch(Objects::isNull)) {
+                TriteBinding next = iterator.next();
                 iterator.remove();
-                throw new NoTriteBindingException("ERROR IN Handle binding B" ,"There is an missing binding for constructor in class " + constructors.get(0).getClass().getSimpleName());
+                throw new NoTriteBindingException("ERROR IN Handle binding B ", "in class " + bindingBuilderClass.getSimpleName() + " for parameter " + next.getClassType().getSimpleName());
             }
 
             if (availableBindings.stream().anyMatch(Objects::isNull)) {

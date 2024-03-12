@@ -39,7 +39,15 @@ public class TriteJection {
         try {
             return (K) triteBinderProcessor.getInstanceByClass(clazz).getBinding();
         } catch (NullPointerException nullPointerException) {
-            throw new NoTriteBindingException("Error in getistance ", clazz.getSimpleName());
+            throw new NoTriteBindingException("Error in getTriteJection ", clazz.getName());
+        }
+    }
+
+    public <K> K getTriteJectionOr(Class<K> clazz, K def) {
+        try {
+            return this.getTriteJection(clazz);
+        } catch (NoTriteBindingException noTriteBindingException) {
+            return def;
         }
     }
 

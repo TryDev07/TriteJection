@@ -2,9 +2,10 @@ package nl.tritewolf.tritejection.tests;
 
 import nl.tritewolf.tritejection.TriteJection;
 import nl.tritewolf.tritejection.binder.TriteBinderContainer;
-import nl.tritewolf.tritejection.binder.TriteBinding;
 import nl.tritewolf.tritejection.tests.injections.*;
 import nl.tritewolf.tritejection.tests.interfaces.TestSubHandling;
+import nl.tritewolf.tritejection.tests.interfaces.constructor.ITestHandlingWithConstructor;
+import nl.tritewolf.tritejection.tests.interfaces.constructor.TestHandlingWithConstructor;
 import nl.tritewolf.tritejection.tests.modules.Module;
 import nl.tritewolf.tritejection.tests.multibindings.Cache;
 import nl.tritewolf.tritejection.tests.multibindings.injections.MultiBinderInject;
@@ -46,6 +47,7 @@ public class TriteJectionTests {
         triteBinderContainer.getBindings().forEach(triteBinding -> {
             Assertions.assertNotNull(triteBinding.getBinding());
             Assertions.assertNotNull(triteBinding.getClassType());
+            Assertions.assertNotNull(triteBinding.getBindingClassType());
         });
     }
 
@@ -79,6 +81,18 @@ public class TriteJectionTests {
 
         Assertions.assertNotNull(triteJection);
         Assertions.assertEquals(69, triteJection.getI());
+    }
+
+    @DisplayName("Interface -> implementation with constructor injection test")
+    @Test
+    public void testInterfaceImplementationInjection() {
+        ITestHandlingWithConstructor triteJection = TriteJectionTests.triteJection.getTriteJection(ITestHandlingWithConstructor.class);
+
+        Assertions.assertNotNull(triteJection);
+        Assertions.assertInstanceOf(TestHandlingWithConstructor.class, triteJection);
+
+        String handle = triteJection.handle();
+        Assertions.assertEquals("this is working", handle);
     }
 
     @DisplayName("Named annotated field injection test")
@@ -122,7 +136,7 @@ public class TriteJectionTests {
 
         Assertions.assertNotNull(triteJection);
         Assertions.assertNotNull(triteJection.getString());
-        Assertions.assertEquals("test" , triteJection.getString());
+        Assertions.assertEquals("test", triteJection.getString());
 
     }
 

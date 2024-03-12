@@ -37,5 +37,4 @@ public class TriteBinderContainer {
     public void addBinderBuilder(TriteJectionModule module, TriteBinding binderBuilder) {
         this.methodBindings.computeIfAbsent(module, triteJectionModule -> new ConcurrentLinkedDeque<>()).add(binderBuilder);
     }
-
 }

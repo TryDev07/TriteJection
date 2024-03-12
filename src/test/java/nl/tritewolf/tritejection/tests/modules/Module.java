@@ -3,8 +3,11 @@ package nl.tritewolf.tritejection.tests.modules;
 import nl.tritewolf.tritejection.module.TriteJectionModule;
 import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
 import nl.tritewolf.tritejection.tests.injections.*;
+import nl.tritewolf.tritejection.tests.interfaces.constructor.ITestHandlingWithConstructor;
 import nl.tritewolf.tritejection.tests.interfaces.Test;
 import nl.tritewolf.tritejection.tests.interfaces.TestHandling;
+import nl.tritewolf.tritejection.tests.interfaces.constructor.TestHandlingWithConstructor;
+import nl.tritewolf.tritejection.tests.interfaces.constructor.TestHandlingWithConstructorParameter;
 import nl.tritewolf.tritejection.tests.multibindings.Cache;
 import nl.tritewolf.tritejection.tests.multibindings.MultiBinding;
 import nl.tritewolf.tritejection.tests.multibindings.injections.MultiBinderInject;
@@ -27,6 +30,10 @@ public class Module extends TriteJectionModule {
 
         //Custom instance injection
         bind(CustomInstanceInject.class).toInstance(new CustomInstanceInject(69)).asEagerSingleton();
+
+        // Interface to implementation injection
+        bind(TestHandlingWithConstructorParameter.class).asEagerSingleton();
+        bind(ITestHandlingWithConstructor.class).to(TestHandlingWithConstructor.class).asEagerSingleton();
 
         //Named field injection
         bind(Test.class).annotatedWith("TestHandling").to(TestHandling.class).asEagerSingleton();

@@ -31,7 +31,7 @@ public class HandleBindings {
         Iterator<TriteBinding> iterator = methodBindings.iterator();
         while (iterator.hasNext()) {
             TriteBinding bindingBuilder = iterator.next();
-            Class<?> bindingBuilderClass = bindingBuilder.getClassType();
+            Class<?> bindingBuilderClass = bindingBuilder.getBindingClassType();
 
             if (this.triteBinderContainer.exists(bindingBuilder)) {
                 return;
@@ -102,7 +102,7 @@ public class HandleBindings {
                 continue;
             }
 
-            this.triteBinderContainer.addBinding(new TriteBinding(bindingBuilder.getClassType(), binding, bindingBuilder.getNamed(), multiBinders, false));
+            this.triteBinderContainer.addBinding(new TriteBinding(bindingBuilder.getClassType(), bindingBuilder.getBindingClassType(), binding, bindingBuilder.getNamed(), multiBinders, false));
             iterator.remove();
 
             declaredConstructor.setAccessible(false);

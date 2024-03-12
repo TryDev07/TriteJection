@@ -14,16 +14,17 @@ import java.util.stream.Collectors;
 
 public class TriteBinderBuilder<K> {
 
-    private Class<? extends K> clazz;
+    private final Class<K> clazz;
+    private Class<? extends K> bindingClass;
     private final TriteJectionModule module;
     private final TriteBinderContainer triteBinderContainer;
     private final TriteJectionMultiBinderContainer triteMultiBinderContainer;
 
     private final TriteBinding.TriteBindingBuilder triteBinding;
 
-
-    public TriteBinderBuilder(Class<? extends K> clazz, TriteJectionModule module, TriteBinderContainer triteBinderContainer, TriteJectionMultiBinderContainer triteMultiBinderContainer) {
+    public TriteBinderBuilder(Class<K> clazz, TriteJectionModule module, TriteBinderContainer triteBinderContainer, TriteJectionMultiBinderContainer triteMultiBinderContainer) {
         this.clazz = clazz;
+        this.bindingClass = clazz;
         this.module = module;
         this.triteBinderContainer = triteBinderContainer;
         this.triteMultiBinderContainer = triteMultiBinderContainer;
@@ -32,7 +33,7 @@ public class TriteBinderBuilder<K> {
     }
 
     private TriteBinding.TriteBindingBuilder initBuilder() {
-        return TriteBinding.builder().classType(clazz);
+        return TriteBinding.builder().classType(this.clazz);
     }
 
     public void asEagerSingleton() {
@@ -46,9 +47,10 @@ public class TriteBinderBuilder<K> {
             this.triteBinderContainer.addBinding(triteBinding);
             return;
         }
-        if (!isConstructorAnnotationPresent(triteBinding)) {
+
+        if (!this.isConstructorAnnotationPresent()) {
             try {
-                Constructor<? extends K> declaredConstructor = clazz.getDeclaredConstructor();
+                Constructor<? extends K> declaredConstructor = this.bindingClass.getDeclaredConstructor();
                 declaredConstructor.setAccessible(true);
 
                 K binding = declaredConstructor.newInstance();
@@ -87,9 +89,9 @@ public class TriteBinderBuilder<K> {
             return;
         }
 
-        if (!isConstructorAnnotationPresent(triteBinding)) {
+        if (!this.isConstructorAnnotationPresent()) {
             try {
-                Constructor<? extends K> declaredConstructor = clazz.getDeclaredConstructor();
+                Constructor<? extends K> declaredConstructor = this.bindingClass.getDeclaredConstructor();
                 declaredConstructor.setAccessible(true);
 
                 K binding = declaredConstructor.newInstance();
@@ -111,14 +113,6 @@ public class TriteBinderBuilder<K> {
         this.triteBinderContainer.addBinderBuilder(this.module, this.triteBinding.build());
     }
 
-    private boolean isConstructorAnnotationPresent(TriteBinding triteBinding) {
-        List<Constructor<?>> collect = Arrays.stream(triteBinding.getClassType().getDeclaredConstructors()).collect(Collectors.toList());
-        if (collect.isEmpty()) {
-            return false;
-        }
-        return collect.stream().anyMatch(constructor -> constructor.isAnnotationPresent(TriteJect.class));
-    }
-
     public TriteBinderBuilder<K> annotatedWith(String name) {
         this.triteBinding.named(name);
         return this;
@@ -131,14 +125,21 @@ public class TriteBinderBuilder<K> {
     }
 
     public TriteBinderBuilder<K> to(Class<? extends K> clazz) {
-        this.clazz = clazz;
+        this.bindingClass = clazz;
+        this.triteBinding.bindingClassType(clazz);
         return this;
     }
-
 
     public TriteBinderBuilder<K> toInstance(K object) {
-        this.triteBinding.classType(clazz).binding(object);
+        this.triteBinding.binding(object);
         return this;
     }
 
+    private boolean isConstructorAnnotationPresent() {
+        List<Constructor<?>> collect = Arrays.stream(this.bindingClass.getDeclaredConstructors()).collect(Collectors.toList());
+        if (collect.isEmpty()) {
+            return false;
+        }
+        return collect.stream().anyMatch(constructor -> constructor.isAnnotationPresent(TriteJect.class));
+    }
 }

@@ -94,7 +94,7 @@ public class HandleBindings {
                 iterator.remove();
 
                 if (!(binding instanceof TriteJectionModule)) {
-                    throw new RuntimeException("Cannot bind " + binding.getClass().getSimpleName() + " because class isn't and module");
+                    throw new RuntimeException("Cannot bind " + binding.getClass().getSimpleName() + " because class isn't a module");
                 }
 
                 TriteJection.getInstance().addModule((TriteJectionModule) binding);

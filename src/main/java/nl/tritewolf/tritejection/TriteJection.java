@@ -62,18 +62,21 @@ public class TriteJection {
     }
 
     public void process() {
+        ClassLoader classLoader = modules.get(0).getClass().getClassLoader();
+        this.process(classLoader, Package.getPackages());
+    }
+
+    public void process(ClassLoader classLoader, Package[] packages) {
         try {
             AnnotationDetector annotationDetector = new AnnotationDetector(new FieldBinding(this.triteBinderProcessor));
 
-            ClassLoader classLoader = modules.get(0).getClass().getClassLoader();
-
-            String[] objects = Arrays.stream(Package.getPackages()).map(Package::getName).toArray(String[]::new);
+            String[] objects = Arrays.stream(packages).map(Package::getName).toArray(String[]::new);
+            System.out.println(Arrays.toString(objects));
 
             annotationDetector.detect(classLoader, objects);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static TriteJection createTriteJection(TriteJectionModule... triteJectionModule) {

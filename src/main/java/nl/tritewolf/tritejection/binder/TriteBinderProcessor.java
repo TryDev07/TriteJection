@@ -25,6 +25,10 @@ public class TriteBinderProcessor {
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                  IllegalAccessException e) {
             e.printStackTrace();
+
+            if (e.getCause() != null) {
+                e.getCause().printStackTrace();
+            }
         }
     }
 

@@ -14,6 +14,7 @@ import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
@@ -44,67 +45,55 @@ public class HandleBindings {
                 throw new TriteMultipleConstructorException();
             }
 
-            Class<?>[] parameterTypes = constructors.get(0).getParameterTypes();
+            Constructor<?> constructor = constructors.get(0);
+            Parameter[] parameters = constructor.getParameters();
             List<Object> availableBindings = new ArrayList<>();
 
-            for (Class<?> parameterType : parameterTypes) {
-                if (parameterType.isAnnotationPresent(TriteNamed.class)) {
-                    TriteBinding binding = triteBinderProcessor.getInstanceByAnnotation(parameterType.getAnnotation(TriteNamed.class).value());
+            for (Parameter parameter : parameters) {
+                Class<?> parameterType = parameter.getType();
 
-                    if (binding != null) {
-                        availableBindings.add(binding.getBinding());
-                    }
+                if (parameter.isAnnotationPresent(TriteNamed.class)) {
+                    String name = parameter.getAnnotation(TriteNamed.class).value();
+                    TriteBinding binding = this.triteBinderProcessor.getInstanceByAnnotation(name);
+                    availableBindings.add(binding.getBinding());
                     continue;
                 }
 
                 try {
-                    TriteBinding binding = triteBinderContainer.getBinding(parameterType);
-
-                    if (binding != null) {
-                        availableBindings.add(binding.getBinding());
-                        continue;
-                    }
-                    availableBindings.add(null);
+                    TriteBinding binding = this.triteBinderContainer.getBinding(parameterType);
+                    availableBindings.add(binding.getBinding());
                 } catch (NoTriteBindingException exception) {
                     throw new NoTriteBindingException("ERROR IN Handle binding A ", "in class " + bindingBuilderClass.getSimpleName() + " for parameter " + parameterType.getSimpleName());
                 }
-            }
-
-            if (!iterator.hasNext() && availableBindings.stream().anyMatch(Objects::isNull)) {
-                TriteBinding next = iterator.next();
-                iterator.remove();
-                throw new NoTriteBindingException("ERROR IN Handle binding B ", "in class " + bindingBuilderClass.getSimpleName() + " for parameter " + next.getClassType().getSimpleName());
             }
 
             if (availableBindings.stream().anyMatch(Objects::isNull)) {
                 continue;
             }
 
-            Constructor<?> declaredConstructor = bindingBuilderClass.getDeclaredConstructor(parameterTypes);
-            declaredConstructor.setAccessible(true);
-
-            Object binding = declaredConstructor.newInstance(availableBindings.toArray(new Object[0]));
+            constructor.setAccessible(true);
+            Object instance = constructor.newInstance(availableBindings.toArray());
 
             Collection<TriteJectionMultiBinder> multiBinders = bindingBuilder.getMultiBinders();
             if (multiBinders != null) {
                 for (TriteJectionMultiBinder multiBinder : multiBinders) {
-                    multiBinder.handleMultiBinding(binding);
+                    multiBinder.handleMultiBinding(instance);
                 }
             }
 
             if (bindingBuilder.isSubModule()) {
                 iterator.remove();
 
-                if (!(binding instanceof TriteJectionModule)) {
-                    throw new RuntimeException("Cannot bind " + binding.getClass().getSimpleName() + " because class isn't a module");
+                if (!(instance instanceof TriteJectionModule)) {
+                    throw new RuntimeException("Cannot bind " + instance.getClass().getSimpleName() + " because class isn't a module");
                 }
 
-                this.instance.addModule((TriteJectionModule) binding);
+                this.instance.addModule((TriteJectionModule) instance);
                 declaredConstructor.setAccessible(false);
                 continue;
             }
 
-            this.triteBinderContainer.addBinding(new TriteBinding(bindingBuilder.getClassType(), bindingBuilder.getBindingClassType(), binding, bindingBuilder.getNamed(), multiBinders, false));
+            this.triteBinderContainer.addBinding(new TriteBinding(bindingBuilder.getClassType(), bindingBuilder.getBindingClassType(), instance, bindingBuilder.getNamed(), multiBinders, false));
             iterator.remove();
 
             declaredConstructor.setAccessible(false);

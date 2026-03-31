@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public class TriteJection {
+public final class TriteJection {
 
     private final TriteBinderContainer triteBinderContainer;
     private final TriteBinderProcessor triteBinderProcessor;
@@ -79,6 +79,4 @@ public class TriteJection {
     public static TriteJection createTriteJection(TriteJectionModule... triteJectionModule) {
         return new TriteJection(triteJectionModule);
     }
-
 }
-

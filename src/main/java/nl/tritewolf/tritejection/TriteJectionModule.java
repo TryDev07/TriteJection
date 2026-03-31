@@ -1,6 +1,5 @@
-package nl.tritewolf.tritejection.module;
+package nl.tritewolf.tritejection;
 
-import nl.tritewolf.tritejection.TriteJection;
 import nl.tritewolf.tritejection.binder.TriteBinderBuilder;
 import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
 
@@ -9,6 +8,12 @@ import java.util.List;
 
 public abstract class TriteJectionModule {
 
+    private TriteJection instance;
+
+    void init(TriteJection instance) {
+        this.instance = instance;
+    }
+
     public abstract void bindings();
 
     public List<TriteJectionMultiBinder> registerMultiBindings() {
@@ -16,6 +21,6 @@ public abstract class TriteJectionModule {
     }
 
     protected <K> TriteBinderBuilder<K> bind(Class<K> clazz) {
-        return new TriteBinderBuilder<>(clazz, this, TriteJection.getInstance().getTriteBinderContainer(), TriteJection.getInstance().getTriteMultiBinderContainer());
+        return new TriteBinderBuilder<>(this.instance, this, clazz);
     }
 }

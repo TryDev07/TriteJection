@@ -5,7 +5,6 @@ import nl.tritewolf.tritejection.binder.TriteBinderContainer;
 import nl.tritewolf.tritejection.binder.TriteBinderProcessor;
 import nl.tritewolf.tritejection.bindings.FieldBinding;
 import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
-import nl.tritewolf.tritejection.module.TriteJectionModule;
 import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinderContainer;
 import nl.tritewolf.tritejection.utils.AnnotationDetector;
 
@@ -17,8 +16,6 @@ import java.util.List;
 @Getter
 public class TriteJection {
 
-    @Getter
-    private static TriteJection instance;
     private final TriteBinderContainer triteBinderContainer;
     private final TriteBinderProcessor triteBinderProcessor;
     private final TriteJectionMultiBinderContainer triteMultiBinderContainer;
@@ -26,9 +23,8 @@ public class TriteJection {
     private final List<TriteJectionModule> modules = new ArrayList<>();
 
     private TriteJection(TriteJectionModule... triteJectionModule) {
-        instance = this;
         this.triteBinderContainer = new TriteBinderContainer();
-        this.triteBinderProcessor = new TriteBinderProcessor(this.triteBinderContainer);
+        this.triteBinderProcessor = new TriteBinderProcessor(this);
         this.triteMultiBinderContainer = new TriteJectionMultiBinderContainer();
 
         addModule(triteJectionModule);
@@ -53,6 +49,8 @@ public class TriteJection {
 
     public void addModule(TriteJectionModule... triteJectionModule) {
         Arrays.stream(triteJectionModule).forEach(module -> {
+            module.init(this);
+
             module.registerMultiBindings().forEach(triteMultiBinderContainer::addTriteJectionMultiBinder);
             module.bindings();
             this.modules.add(module);

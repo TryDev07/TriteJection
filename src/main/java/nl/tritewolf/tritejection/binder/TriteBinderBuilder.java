@@ -1,8 +1,8 @@
 package nl.tritewolf.tritejection.binder;
 
 import nl.tritewolf.tritejection.TriteJection;
+import nl.tritewolf.tritejection.TriteJectionModule;
 import nl.tritewolf.tritejection.annotations.TriteJect;
-import nl.tritewolf.tritejection.module.TriteJectionModule;
 import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
 import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinderContainer;
 
@@ -14,20 +14,26 @@ import java.util.stream.Collectors;
 
 public class TriteBinderBuilder<K> {
 
-    private final Class<K> clazz;
-    private Class<? extends K> bindingClass;
+    private final TriteJection instance;
     private final TriteJectionModule module;
+
     private final TriteBinderContainer triteBinderContainer;
     private final TriteJectionMultiBinderContainer triteMultiBinderContainer;
 
+    private final Class<K> clazz;
+    private Class<? extends K> bindingClass;
+
     private final TriteBinding.TriteBindingBuilder triteBinding;
 
-    public TriteBinderBuilder(Class<K> clazz, TriteJectionModule module, TriteBinderContainer triteBinderContainer, TriteJectionMultiBinderContainer triteMultiBinderContainer) {
+    public TriteBinderBuilder(TriteJection instance, TriteJectionModule module, Class<K> clazz) {
+        this.instance = instance;
+        this.module = module;
+
+        this.triteBinderContainer = instance.getTriteBinderContainer();
+        this.triteMultiBinderContainer = instance.getTriteMultiBinderContainer();
+
         this.clazz = clazz;
         this.bindingClass = clazz;
-        this.module = module;
-        this.triteBinderContainer = triteBinderContainer;
-        this.triteMultiBinderContainer = triteMultiBinderContainer;
 
         this.triteBinding = initBuilder();
     }
@@ -73,7 +79,6 @@ public class TriteBinderBuilder<K> {
         }
 
         this.triteBinderContainer.addBinderBuilder(this.module, this.triteBinding.build());
-
     }
 
     public void asSubModule() {
@@ -98,7 +103,8 @@ public class TriteBinderBuilder<K> {
                 if (!(binding instanceof TriteJectionModule)) {
                     throw new RuntimeException("Cannot bind " + binding.getClass().getSimpleName() + " because class isn't a module");
                 }
-                TriteJection.getInstance().addModule((TriteJectionModule) binding);
+
+                this.instance.addModule((TriteJectionModule) binding);
 
                 TriteBinding build = this.triteBinding.binding(binding).build();
                 this.triteBinderContainer.addBinding(build);

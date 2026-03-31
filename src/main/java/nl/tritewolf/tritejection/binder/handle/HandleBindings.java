@@ -2,6 +2,7 @@ package nl.tritewolf.tritejection.binder.handle;
 
 import lombok.AllArgsConstructor;
 import nl.tritewolf.tritejection.TriteJection;
+import nl.tritewolf.tritejection.TriteJectionModule;
 import nl.tritewolf.tritejection.annotations.TriteJect;
 import nl.tritewolf.tritejection.annotations.TriteNamed;
 import nl.tritewolf.tritejection.binder.TriteBinderContainer;
@@ -9,7 +10,6 @@ import nl.tritewolf.tritejection.binder.TriteBinderProcessor;
 import nl.tritewolf.tritejection.binder.TriteBinding;
 import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
 import nl.tritewolf.tritejection.exceptions.TriteMultipleConstructorException;
-import nl.tritewolf.tritejection.module.TriteJectionModule;
 import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
 
 import java.lang.reflect.Constructor;
@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class HandleBindings {
+
+    private final TriteJection instance;
 
     private final TriteBinderContainer triteBinderContainer;
     private final TriteBinderProcessor triteBinderProcessor;
@@ -97,7 +99,7 @@ public class HandleBindings {
                     throw new RuntimeException("Cannot bind " + binding.getClass().getSimpleName() + " because class isn't a module");
                 }
 
-                TriteJection.getInstance().addModule((TriteJectionModule) binding);
+                this.instance.addModule((TriteJectionModule) binding);
                 declaredConstructor.setAccessible(false);
                 continue;
             }

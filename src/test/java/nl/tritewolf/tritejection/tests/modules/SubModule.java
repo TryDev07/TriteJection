@@ -1,7 +1,7 @@
 package nl.tritewolf.tritejection.tests.modules;
 
 import nl.tritewolf.tritejection.annotations.TriteJect;
-import nl.tritewolf.tritejection.module.TriteJectionModule;
+import nl.tritewolf.tritejection.TriteJectionModule;
 import nl.tritewolf.tritejection.tests.injections.AsEagerSingletonInject;
 import nl.tritewolf.tritejection.tests.interfaces.TestSubHandling;
 import org.junit.jupiter.api.Assertions;

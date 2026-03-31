@@ -3,7 +3,7 @@ package nl.tritewolf.tritejection.binder;
 import lombok.Getter;
 import lombok.Setter;
 import nl.tritewolf.tritejection.exceptions.NoTriteBindingException;
-import nl.tritewolf.tritejection.module.TriteJectionModule;
+import nl.tritewolf.tritejection.TriteJectionModule;
 
 import java.util.ArrayList;
 import java.util.List;

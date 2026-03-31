@@ -1,6 +1,6 @@
 package nl.tritewolf.tritejection.tests.modules;
 
-import nl.tritewolf.tritejection.module.TriteJectionModule;
+import nl.tritewolf.tritejection.TriteJectionModule;
 import nl.tritewolf.tritejection.multibinder.TriteJectionMultiBinder;
 import nl.tritewolf.tritejection.tests.injections.*;
 import nl.tritewolf.tritejection.tests.interfaces.constructor.ITestHandlingWithConstructor;

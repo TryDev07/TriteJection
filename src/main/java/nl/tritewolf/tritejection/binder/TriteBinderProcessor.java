@@ -16,7 +16,7 @@ public class TriteBinderProcessor {
     public TriteBinderProcessor(TriteJection instance) {
         this.instance = instance;
 
-        this.triteBinderContainer = new TriteBinderContainer();
+        this.triteBinderContainer = instance.getTriteBinderContainer();
     }
 
     public void handleBindings(TriteJectionModule module) {

@@ -89,14 +89,14 @@ public class HandleBindings {
                 }
 
                 this.instance.addModule((TriteJectionModule) instance);
-                declaredConstructor.setAccessible(false);
+                constructor.setAccessible(false);
                 continue;
             }
 
             this.triteBinderContainer.addBinding(new TriteBinding(bindingBuilder.getClassType(), bindingBuilder.getBindingClassType(), instance, bindingBuilder.getNamed(), multiBinders, false));
             iterator.remove();
 
-            declaredConstructor.setAccessible(false);
+            constructor.setAccessible(false);
         }
     }
 }

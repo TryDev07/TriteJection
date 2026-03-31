@@ -10,7 +10,7 @@ public abstract class TriteJectionModule {
 
     private TriteJection instance;
 
-    void init(TriteJection instance) {
+    final void init(TriteJection instance) {
         this.instance = instance;
     }
 

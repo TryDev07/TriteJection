@@ -66,7 +66,7 @@ public class TriteJection {
 
     public void process(ClassLoader classLoader, Package[] packages) {
         try {
-            AnnotationDetector annotationDetector = new AnnotationDetector(new FieldBinding(this.triteBinderProcessor));
+            AnnotationDetector annotationDetector = new AnnotationDetector(new FieldBinding(this.triteBinderProcessor, classLoader));
 
             String[] objects = Arrays.stream(packages).map(Package::getName).toArray(String[]::new);
 

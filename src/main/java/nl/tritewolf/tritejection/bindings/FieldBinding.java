@@ -13,13 +13,16 @@ import java.lang.reflect.Field;
 public class FieldBinding implements FieldReporter {
 
     private final TriteBinderProcessor triteBinderProcessor;
+    private final ClassLoader classLoader;
 
     @Override
     public void reportFieldAnnotation(Class<? extends Annotation> annotation, String className, String fieldName) {
         try {
-            Class<?> clazz = Class.forName(className);
+            Class<?> clazz = Class.forName(className, false, this.classLoader);
+
             Field declaredField = clazz.getDeclaredField(fieldName);
             declaredField.setAccessible(true);
+
             if (annotation.equals(TriteJect.class)) {
                 declaredField.set(triteBinderProcessor.getInstanceByClass(clazz).getBinding(),
                         triteBinderProcessor.getInstanceByClass(declaredField.getType()).getBinding());
